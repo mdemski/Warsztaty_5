@@ -1,25 +1,37 @@
 package pl.coderslab.dao;
 
+import org.springframework.stereotype.Component;
 import pl.coderslab.beans.Book;
-import pl.coderslab.db.DbUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BookDao {
+    private String url;
+    private String user;
+    private String password;
+
+    public BookDao(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
+
     private static final String CREATE_BOOK_QUERY =
-            "INSERT INTO books(title, author, isbn, type, publisher) VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO book(title, author, isbn, type, publisher) VALUES (?, ?, ?, ?, ?)";
     private static final String READ_BOOK_QUERY =
-            "SELECT * FROM books where id = ?";
+            "SELECT * FROM book where id = ?";
     private static final String UPDATE_BOOK_QUERY =
-            "UPDATE books SET title = ?, author = ?, isbn = ?, type = ?, publisher = ? where id = ?";
+            "UPDATE book SET title = ?, author = ?, isbn = ?, type = ?, publisher = ? where id = ?";
     private static final String DELETE_BOOK_QUERY =
-            "DELETE FROM books WHERE id = ?";
+            "DELETE FROM book WHERE id = ?";
     private static final String FIND_ALL_BOOKS_QUERY =
-            "SELECT * FROM books";
+            "SELECT * FROM book";
 
     public Book create(Book book) {
-        try (Connection conn = DbUtil.getConnection()) {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement statement =
                     conn.prepareStatement(CREATE_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, book.getTitle());
@@ -30,7 +42,7 @@ public class BookDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                book.setId(resultSet.getInt(1));
+                book.setId(resultSet.getLong(1));
             }
             return book;
         } catch (SQLException e) {
@@ -40,7 +52,7 @@ public class BookDao {
     }
 
     public Book read(long bookId) {
-        try (Connection conn = DbUtil.getConnection()) {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement statement = conn.prepareStatement(READ_BOOK_QUERY);
             statement.setLong(1, bookId);
             ResultSet resultSet = statement.executeQuery();
@@ -61,7 +73,7 @@ public class BookDao {
     }
 
     public void update(Book book) {
-        try (Connection conn = DbUtil.getConnection()) {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement statement = conn.prepareStatement(UPDATE_BOOK_QUERY);
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
@@ -76,7 +88,7 @@ public class BookDao {
     }
 
     public void delete(long bookId) {
-        try (Connection conn = DbUtil.getConnection()) {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement statement = conn.prepareStatement(DELETE_BOOK_QUERY);
             statement.setLong(1, bookId);
             statement.executeUpdate();
@@ -86,7 +98,8 @@ public class BookDao {
     }
 
     public List<Book> allBooks() {
-        try (Connection conn = DbUtil.getConnection()) {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            System.out.println("połączono do bazy");
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_BOOKS_QUERY);
             ResultSet resultSet = statement.executeQuery();
             List<Book> books = new ArrayList<>();
@@ -98,12 +111,12 @@ public class BookDao {
                 String isbn = resultSet.getString("isbn");
                 String type = resultSet.getString("type");
                 String publisher = resultSet.getString("publisher");
-                book.setTitle(type);
-                book.setTitle(publisher);
-                book.setId(id);
                 book.setTitle(title);
+                book.setPublisher(publisher);
+                book.setId(id);
                 book.setAuthor(author);
                 book.setIsbn(isbn);
+                book.setType(type);
                 books.add(book);
             }
             return books;
@@ -112,5 +125,4 @@ public class BookDao {
         }
         return null;
     }
-
 }
