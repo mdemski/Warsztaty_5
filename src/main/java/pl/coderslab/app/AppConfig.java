@@ -9,9 +9,6 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import pl.coderslab.beans.BookService;
-import pl.coderslab.beans.DbBookService;
-import pl.coderslab.beans.MemoryBookService;
 import pl.coderslab.dao.BookDao;
 
 @Configuration
@@ -44,6 +41,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public BookDao bookDao(){
-        return new BookDao();
+        return new BookDao("jdbc:mysql://localhost:3306/books?useSSL=false&characterEncoding=utf8", "root", "coderslab");
     }
 }
