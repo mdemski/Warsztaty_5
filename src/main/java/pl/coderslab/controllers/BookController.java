@@ -11,12 +11,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/books")
 public class BookController {
-    @Qualifier("memoryBookService")
-    @Autowired
-    private BookService bookService;
     @Qualifier("dbBookService")
     @Autowired
-    private BookService bookServiceDb;
+    private BookService bookService;
 
     @GetMapping("/")
     public List<Book> getAllBooks() {
@@ -30,19 +27,17 @@ public class BookController {
 
     @PostMapping("/")
     public void addBook(@RequestBody Book book) {
-        bookServiceDb.addBook(book);
+        System.out.println(book.toString());
         bookService.addBook(book);
     }
 
     @DeleteMapping("/{bookId}")
     public void deleteBook(@PathVariable long bookId) {
-        bookServiceDb.deleteBook(bookId);
         bookService.deleteBook(bookId);
     }
 
     @PutMapping("/")
     public void editBook(@RequestBody Book book) {
-        bookServiceDb.editBook(book);
         bookService.editBook(book);
     }
 }
