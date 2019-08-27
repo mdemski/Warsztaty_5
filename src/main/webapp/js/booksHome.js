@@ -36,10 +36,10 @@ $(function () {
             table.append("<tr>"
                 + "<td> <section class='bookInfo'><dt class='bookTitle'>" + result[i].title
                 + "</dt><dd><div class='bookId' id=" + result[i].id + ">" + "</div>"
-                + "<input class='author' placeholder='" + author + "'><br>"
-                + "<input class='publisher' placeholder='" + publisher + "'><br>"
-                + "<input class='isbn' placeholder='" + isbn + "'><br>"
-                + "<input class='type' placeholder='" + type + "'>" + "</dd></dl></section></td>"
+                + "<input class='author' placeholder='" + result[i].author + "'><br>"
+                + "<input class='publisher' placeholder='" + result[i].publisher + "'><br>"
+                + "<input class='isbn' placeholder='" + result[i].isbn + "'><br>"
+                + "<input class='type' placeholder='" + result[i].type + "'>" + "</dd></dl></section></td>"
                 + "<td>" + "<button id='" + result[i].id + "' class='deleteBook' data-method='DELETE'>" + "Usuń" + "</button>" + "</td>"
                 + "<td>" + "<button id='" + result[i].id + "' class='editBook' data-method='PUT'>" + "Edytuj" + "</button>" + "</td>"
                 + "</tr>");
