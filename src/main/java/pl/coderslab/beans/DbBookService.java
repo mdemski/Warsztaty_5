@@ -1,5 +1,6 @@
 package pl.coderslab.beans;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.dao.BookDao;
 
@@ -7,11 +8,9 @@ import java.util.List;
 
 @Service
 public class DbBookService implements BookService {
-    private BookDao bookDao;
 
-    public DbBookService(BookDao bookDao) {
-        this.bookDao = bookDao;
-    }
+    @Autowired
+    private BookDao bookDao;
 
     @Override
     public List<Book> getList() {
