@@ -1,13 +1,11 @@
 package pl.coderslab.dao;
 
-import org.springframework.stereotype.Component;
 import pl.coderslab.beans.Book;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class BookDao {
     private String url;
     private String user;
@@ -121,6 +119,7 @@ public class BookDao {
             }
             return books;
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println("Nie odnaleziono książek.");
         }
         return null;
